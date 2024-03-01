@@ -1,7 +1,7 @@
 import google.generativeai as genai
 from google.generativeai.types import safety_types
 
-import os 
+import os
 
 from flask import Flask, request
 import logging
