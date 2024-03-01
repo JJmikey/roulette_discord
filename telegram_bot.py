@@ -18,6 +18,7 @@ genai.configure(api_key=api_key)
 bot_token=os.getenv("TELEGRAM_BOT_TOKEN")
 
 def start(update, context):
+    print("start command received")
     context.bot.send_message(chat_id=update.effective_chat.id, text="我是你的 Bot，很高興見到你！")
 
 app = Flask(__name__)
