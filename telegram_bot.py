@@ -22,7 +22,7 @@ def start(update, context):
 
 application = Flask(__name__)
 bot = Bot(token=bot_token)
-dispatcher = Dispatcher(bot, None, workers=0)
+dispatcher = Dispatcher(bot, None, workers=1)
 
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
@@ -33,13 +33,13 @@ def index():
     dispatcher.process_update(update)
     return ''
 
-@application.route('/main', methods=['GET'])
+@application.route('/', methods=['GET'])
 def test():
     return 'Flask app is running!'
 
 
 if __name__ == '__main__':
-    application.run(port=5000)
+    app = application.run(port=5000)
 
 
 
