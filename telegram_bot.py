@@ -7,9 +7,9 @@ from flask import Flask, request
 
 
 
-from telegram import Bot
-from telegram.ext import Updater, CommandHandler
-from telegram.ext import Dispatcher
+from telegram import Bot, Update
+from telegram.ext import Dispatcher, CommandHandler, CallbackContext
+
 
 # Initialize Gemini-Pro
 api_key = os.getenv("GOOGLE_GEMINI_KEY")
@@ -18,25 +18,29 @@ genai.configure(api_key=api_key)
 bot_token=os.getenv("TELEGRAM_BOT_TOKEN")
 
 
-
-def start(update, context):
-    print("start command received")
-    context.bot.send_message(chat_id=update.effective_chat.id, text="我是你的 Bot，很高興見到你！")
-
 app = Flask(__name__)
+
+def start_callback(update: Update, context: CallbackContext):
+    context.bot.send_message(chat_id=update.effective_chat.id, text="你好，我是你的 Bot！")
+
+# 初始化你的 bot 和 Dispatcher
 bot = Bot(token=bot_token)
 bot.set_webhook(url=f"https://telegram-bot-liart-nine.vercel.app/{bot_token}")
 
 dispatcher = Dispatcher(bot, None, workers=1)
 
-start_handler = CommandHandler('start', start)
+# 為你的 bot 添加處理函數
+start_handler = CommandHandler('start', start_callback)  # 你需要定義 start_callback
 dispatcher.add_handler(start_handler)
 
 @app.route(f'/{bot_token}', methods=['POST'])
-def index():
+def telegram_webhook():
     update = Update.de_json(request.get_json(), bot)
-    dispatcher.process_update(update)
-    return ''
+    # process your telegram update
+    return '', 200  # success status
+
+
+
 
 @app.route('/', methods=['GET'])
 def test():
@@ -44,7 +48,7 @@ def test():
 
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(port=5000, debug=True)
 
 
 
