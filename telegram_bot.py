@@ -17,12 +17,16 @@ genai.configure(api_key=api_key)
 
 bot_token=os.getenv("TELEGRAM_BOT_TOKEN")
 
+
+
 def start(update, context):
     print("start command received")
     context.bot.send_message(chat_id=update.effective_chat.id, text="我是你的 Bot，很高興見到你！")
 
 app = Flask(__name__)
 bot = Bot(token=bot_token)
+bot.set_webhook(url=f"https://telegram-bot-liart-nine.vercel.app/{bot_token}")
+
 dispatcher = Dispatcher(bot, None, workers=1)
 
 start_handler = CommandHandler('start', start)
