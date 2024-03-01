@@ -13,7 +13,11 @@
         {
             "source": "/",
             "destination": "telegram_bot.py"
-        }
+        },
+         {
+            "source": "/test1",
+            "destination": "telegram_bot.py"
+        },
     ],
     "headers": [
         {
