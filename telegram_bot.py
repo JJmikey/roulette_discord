@@ -46,7 +46,9 @@ def telegram_webhook():
     return '', 200  # success status
 
 
-@app.route("/test", methods=['GET'])
+
+
+@app.route("/test1", methods=['GET'])
 def test1():
     return 'Test successful!', 200
 
