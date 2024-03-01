@@ -34,12 +34,6 @@ dispatcher = Dispatcher(bot, None, workers=1)
 start_handler = CommandHandler('start', start_callback)  # 你需要定義 start_callback
 dispatcher.add_handler(start_handler)
 
-
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080))) #for deploy on vercel
-            
 @app.route(f"/{bot_token}", methods=['POST'])
 def telegram_webhook():
     update = Update.de_json(request.get_json(), bot)
@@ -56,6 +50,12 @@ def test1():
 @app.route("/", methods=['GET'])
 def test2():
     return 'Flask app is running!'
+
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080))) #for deploy on vercel
+            
 
 
 
