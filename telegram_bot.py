@@ -11,7 +11,7 @@ from telegram import Bot, Update
 from telegram.ext import Dispatcher, CommandHandler, CallbackContext
 
 
-# Initialize Gemini-Pro API
+# Initialize Gemini-Pro
 api_key = os.getenv("GOOGLE_GEMINI_KEY")
 genai.configure(api_key=api_key)
 
