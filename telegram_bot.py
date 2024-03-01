@@ -27,13 +27,13 @@ dispatcher = Dispatcher(bot, None, workers=1)
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
 
-@application.route(f'/{bot_token}', methods=['POST'])
+@app.route(f'/{bot_token}', methods=['POST'])
 def index():
     update = Update.de_json(request.get_json(), bot)
     dispatcher.process_update(update)
     return ''
 
-@application.route('/', methods=['GET'])
+@app.route('/', methods=['GET'])
 def test():
     return 'Flask app is running!'
 
