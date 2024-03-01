@@ -2,7 +2,7 @@
     "version": 2,
     "builds": [
         {
-            "src": "travel_planner.py",
+            "src": "telegram_bot.py",
             "use": "@vercel/python",
             "config": {
                 "maxLambdaSize": "10mb"
@@ -12,7 +12,7 @@
     "rewrites": [
         {
             "source": "/main",
-            "destination": "travel_planner.py"
+            "destination": "telegram_bot.py"
         }
     ],
     "headers": [
