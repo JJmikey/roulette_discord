@@ -4,7 +4,7 @@ from google.generativeai.types import safety_types
 import os 
 
 from flask import Flask, request
-
+import logging
 
 
 from telegram import Bot, Update
@@ -19,6 +19,7 @@ bot_token=os.getenv("TELEGRAM_BOT_TOKEN")
 
 
 app = Flask(__name__)
+app.logger.setLevel(logging.ERROR)
 
 def start_callback(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=update.effective_chat.id, text="你好，我是你的 Bot！")
@@ -37,7 +38,7 @@ dispatcher.add_handler(start_handler)
 
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080))) #for deploy on vercel
             
 @app.route(f"/{bot_token}", methods=['POST'])
 def telegram_webhook():
