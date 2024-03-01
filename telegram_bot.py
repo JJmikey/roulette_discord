@@ -32,6 +32,11 @@ def index():
     dispatcher.process_update(update)
     return ''
 
+@application.route('/', methods=['GET'])
+def test():
+    return 'Flask app is running!'
+
+
 if __name__ == '__main__':
     application.run(port=5000)
 
