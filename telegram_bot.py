@@ -20,7 +20,7 @@ bot_token=os.getenv("TELEGRAM_BOT_TOKEN")
 def start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="我是你的 Bot，很高興見到你！")
 
-application = Flask(__name__)
+app = Flask(__name__)
 bot = Bot(token=bot_token)
 dispatcher = Dispatcher(bot, None, workers=1)
 
@@ -39,7 +39,7 @@ def test():
 
 
 if __name__ == '__main__':
-    app = application.run(port=5000)
+    app.run(port=5000)
 
 
 
