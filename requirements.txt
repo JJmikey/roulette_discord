@@ -1,4 +1,2 @@
-Flask
-werkzeug
-firebase-admin
-requests
+python-telegram-bot==13.7
+google.generativeai
