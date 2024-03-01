@@ -41,11 +41,11 @@ def telegram_webhook():
 
 
 @app.route('/test', methods=['GET'])
-def test():
+def test1():
     return 'Test successful!', 200
 
 @app.route('/', methods=['GET'])
-def test():
+def test2():
     return 'Flask app is running!'
 
 
