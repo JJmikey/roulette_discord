@@ -9,6 +9,7 @@ from flask import Flask, request
 
 from telegram import Bot
 from telegram.ext import Updater, CommandHandler
+from telegram.ext import Dispatcher
 
 # Initialize Gemini-Pro
 api_key = os.getenv("GOOGLE_GEMINI_KEY")
@@ -32,7 +33,7 @@ def index():
     dispatcher.process_update(update)
     return ''
 
-@application.route('/', methods=['GET'])
+@application.route('/main', methods=['GET'])
 def test():
     return 'Flask app is running!'
 
