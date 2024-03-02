@@ -23,15 +23,9 @@ app = Flask(__name__)
 
 
 def start_callback(update: Update, context: CallbackContext):
-    check_webhook()
     context.bot.send_message(chat_id=update.effective_chat.id, text="你好，我是你的 Bot！")
 
 
-def check_webhook():
-    
-    info = bot.getWebhookInfo()
-
-    print(f'URL: {info.url}, Has custom certificate: {info.has_custom_certificate}, Pending update count: {info.pending_update_count}, Last error date: {info.last_error_date}, Last error message: {info.last_error_message}')
 
 # 初始化你的 bot 和 Dispatcher
 bot = Bot(bot_token)
@@ -45,8 +39,10 @@ dispatcher.add_handler(start_handler)
 
 @app.route(f"/{bot_token}", methods=['POST'])
 def telegram_webhook():
+    #建立一個 Update 物件，並使用進來的 JSON 進行填充
     update = Update.de_json(request.get_json(), bot)
-    # process your telegram update
+    #使用 Dispatcher 物件來處理該 Update
+    dispatcher.process_update(update)
     return '', 200  # success status
 
 
