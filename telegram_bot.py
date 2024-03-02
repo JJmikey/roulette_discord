@@ -3,7 +3,7 @@ from google.generativeai.types import safety_types
 
 import os 
 
-from flask import Flask, request, jsonify, logging
+from flask import Flask, request, jsonify, logger
 
 
 
@@ -73,9 +73,9 @@ def get_webhook_info():
 def test1():
     return 'Test successful!', 200
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def hello_world():
-    app.logger.info('信息：進行中...')
+    app.logger.info('訊息：執行中...')
     return 'Hello, World!'
 
 @app.route("/site-map")
