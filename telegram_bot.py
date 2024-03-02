@@ -9,7 +9,7 @@ from flask import Flask, request, jsonify, logging
 
 
 from telegram import Bot, Update
-from telegram.ext import CommandHandler, CallbackContext,MessageHandler,Dispatcher
+from telegram.ext import CommandHandler, CallbackContext,MessageHandler,Dispatcher, Filters
 
 
 # Ini)tialize Gemini-Pro
