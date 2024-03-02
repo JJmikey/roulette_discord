@@ -20,7 +20,7 @@ bot_token=os.getenv("TELEGRAM_BOT_TOKEN")
 
 
 app = Flask(__name__)
-app.logger.info()
+
 
 def start_callback(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=update.effective_chat.id, text="你好，我是你的 Bot！")
@@ -73,9 +73,10 @@ def get_webhook_info():
 def test1():
     return 'Test successful!', 200
 
-@app.route("/", methods=['GET'])
-def test2():
-    return 'Flask app is running!'
+@app.route('/')
+def hello_world():
+    app.logger.info('信息：進行中...')
+    return 'Hello, World!'
 
 @app.route("/site-map")
 def site_map():
