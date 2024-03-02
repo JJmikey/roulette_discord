@@ -3,8 +3,9 @@ from google.generativeai.types import safety_types
 
 import os 
 
-from flask import Flask, request
-import logging
+from flask import Flask, request, jsonify
+
+
 
 
 from telegram import Bot, Update
@@ -19,10 +20,10 @@ bot_token=os.getenv("TELEGRAM_BOT_TOKEN")
 
 
 app = Flask(__name__)
-app.logger.setLevel(logging.ERROR)
+
 
 def start_callback(update: Update, context: CallbackContext):
-    check_webhook
+    check_webhook()
     context.bot.send_message(chat_id=update.effective_chat.id, text="你好，我是你的 Bot！")
 
 
@@ -49,7 +50,16 @@ def telegram_webhook():
     return '', 200  # success status
 
 
-
+@app.route('/webhook_info', methods=['GET'])
+def get_webhook_info():
+    info = bot.getWebhookInfo()
+    return jsonify({
+      'URL': info.url, 
+      'Has custom certificate': info.has_custom_certificate, 
+      'Pending update count': info.pending_update_count, 
+      'Last error date': info.last_error_date, 
+      'Last error message': info.last_error_message
+    })
 
 @app.route("/test1", methods=['GET'])
 def test1():
