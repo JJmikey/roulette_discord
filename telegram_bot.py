@@ -1,5 +1,5 @@
 import google.generativeai as genai
-from google.generativeai.types import safety_types
+from google.generativeai.types import HarmCategory, HarmBlockThreshold
 
 import os 
 
@@ -19,10 +19,10 @@ def generate_response(input_text):
     response = model.generate_content(
         input_text,
         safety_settings={
-            'HARM_CATEGORY_SEXUALLY_EXPLICIT': 'BLOCK_NONE',
-            'HARM_CATEGORY_HATE_SPEECH':'BLOCK_NONE',
-            'HARM_CATEGORY_HARASSMENT': 'BLOCK_NONE',
-            'HARM_CATEGORY_DANGEROUS_CONTENT':'BLOCK_NONE'
+            HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT:HarmBlockThreshold.BLOCK_NONE,
+            HarmCategory.HARM_CATEGORY_HATE_SPEECH:HarmBlockThreshold.BLOCK_NONE,
+            HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+            HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT:HarmBlockThreshold.BLOCK_NONE,
             },
             generation_config=genai.types.GenerationConfig(
             candidate_count=1,
@@ -50,7 +50,8 @@ bot_token=os.getenv("TELEGRAM_BOT_TOKEN")
 
 app = Flask(__name__)
 
-
+# 添加一個全局變量用來保存歷史消息
+chat_history = []
 
 def start_callback(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=update.effective_chat.id, text="你好，我是你的 Bot！")
@@ -58,10 +59,21 @@ def start_callback(update: Update, context: CallbackContext):
 
 def text_callback(update: Update, context: CallbackContext):
     logging.info("執行 text_callback 函數")  # 這是新增的日誌語句
-    # 獲取用戶的訊息
+    # 獲取用户的消息和chat_id
     user_text = update.message.text
+    chat_id = update.effective_chat.id
+    # 將用户的消息添加到聊天历史记录
+    if chat_id not in chat_history:
+        chat_history[chat_id] = []
+    chat_history[chat_id].append({"user": user_text})
+    
     # 使用 GEMINI 生成器創建回應
-    response = generate_response(user_text)
+    input_context = "".join(msg["user"] for msg in chat_history[chat_id])
+    response = generate_response(input_context)
+
+    # 在聊天历史记录中添加机器人的回应
+    chat_history[chat_id].append({"bot": response})
+
     # 將生成的回應傳給用戶
     context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
