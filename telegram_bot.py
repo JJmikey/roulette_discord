@@ -69,7 +69,13 @@ def test1():
 def test2():
     return 'Flask app is running!'
 
-
+@app.route("/site-map")
+def site_map():
+    output = []
+    for rule in app.url_map.iter_rules():
+        methods = ', '.join(sorted(rule.methods))
+        output.append(f"{rule} ({methods})")
+    return "<br>".join(sorted(output))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080))) #for deploy on vercel
