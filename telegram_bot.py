@@ -50,8 +50,8 @@ bot_token=os.getenv("TELEGRAM_BOT_TOKEN")
 
 app = Flask(__name__)
 
-# 添加一個全局變量用來保存歷史消息
-chat_history = []
+# 將 chat_history 初始化為字典
+chat_history = {}
 
 def start_callback(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=update.effective_chat.id, text="你好，我是你的 Bot！")
@@ -62,6 +62,7 @@ def text_callback(update: Update, context: CallbackContext):
     # 獲取用户的消息和chat_id
     user_text = update.message.text
     chat_id = update.effective_chat.id
+    
     # 將用户的消息添加到聊天历史记录
     if chat_id not in chat_history:
         chat_history[chat_id] = []
