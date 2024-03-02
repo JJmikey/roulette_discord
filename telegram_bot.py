@@ -66,11 +66,15 @@ def text_callback(update: Update, context: CallbackContext):
     # 將用户的消息添加到聊天历史记录
     if chat_id not in chat_history:
         chat_history[chat_id] = []
-    chat_history[chat_id].append({"user": user_text})
-    
+   
+
+    # 僅將對話歷史中的 'role' 和 'parts' 結合
+    chat_history[chat_id] = "".join(f"{msg['role']}:{msg['parts']}" for msg in chat_history[chat_id]if "user" in msg)
+    chat_history[chat_id].append({'role': 'user', 'parts': user_text})
+    full_input = f" {chat_history[chat_id]}"
+
     # 使用 GEMINI 生成器創建回應
-    input_context = "".join(msg["user"] for msg in chat_history[chat_id] if "user" in msg)
-    response = generate_response(input_context)
+    response = generate_response(full_input)
 
     # 在聊天历史记录中添加机器人的回应
     chat_history[chat_id].append({"bot": response})
