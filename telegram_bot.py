@@ -3,10 +3,8 @@ from google.generativeai.types import safety_types
 
 import os 
 
-from flask import Flask, request, jsonify, logging
-
-
-
+import logging
+from flask import Flask, request, jsonify
 
 from telegram import Bot, Update
 from telegram.ext import CommandHandler, CallbackContext,MessageHandler,Dispatcher, Filters
