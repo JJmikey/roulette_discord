@@ -14,10 +14,42 @@ from telegram.ext import CommandHandler, CallbackContext,MessageHandler,Dispatch
 api_key = os.getenv("GOOGLE_GEMINI_KEY")
 genai.configure(api_key=api_key)
 
+def generate_response(input_text):
+    model = genai.GenerativeModel('gemini-pro')
+    response = model.generate_content(
+        input_text,
+        safety_settings={
+            'HARM_CATEGORY_SEXUALLY_EXPLICIT': 'BLOCK_NONE',
+            'HARM_CATEGORY_HATE_SPEECH':'BLOCK_NONE',
+            'HARM_CATEGORY_HARASSMENT': 'BLOCK_NONE',
+            'HARM_CATEGORY_DANGEROUS_CONTENT':'BLOCK_NONE'
+            },
+            generation_config=genai.types.GenerationConfig(
+            candidate_count=1,
+            stop_sequences=['||'],
+            max_output_tokens=4000,
+            temperature=0.6,
+        )
+    )
+    # 尝试从响应对象中提取文本内容
+   
+    if hasattr(response, 'parts'):
+        # 如果回答包含多个部分，则遍历所有部分
+        for part in response.parts:
+                response_text = part.text
+                return response_text
+    else:
+        #如果回答只有一个简单的文本部分, 直接打印response.text
+        return response_text
+
+     
+
+
 bot_token=os.getenv("TELEGRAM_BOT_TOKEN")
 
 
 app = Flask(__name__)
+
 
 
 def start_callback(update: Update, context: CallbackContext):
@@ -26,7 +58,12 @@ def start_callback(update: Update, context: CallbackContext):
 
 def text_callback(update: Update, context: CallbackContext):
     logging.info("執行 text_callback 函數")  # 這是新增的日誌語句
-    context.bot.send_message(chat_id=update.effective_chat.id, text="你好")
+    # 獲取用戶的訊息
+    user_text = update.message.text
+    # 使用 GEMINI 生成器創建回應
+    response = generate_response(user_text)
+    # 將生成的回應傳給用戶
+    context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
 # 初始化你的 bot 和 Dispatcher
 bot = Bot(bot_token)
