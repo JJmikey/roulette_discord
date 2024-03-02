@@ -1,7 +1,7 @@
 import google.generativeai as genai
 from google.generativeai.types import safety_types
 
-import os
+import os 
 
 from flask import Flask, request
 import logging
@@ -11,7 +11,7 @@ from telegram import Bot, Update
 from telegram.ext import Dispatcher, CommandHandler, CallbackContext
 
 
-# Initialize Gemini-Pro API
+# Initialize Gemini-Pro
 api_key = os.getenv("GOOGLE_GEMINI_KEY")
 genai.configure(api_key=api_key)
 
@@ -22,10 +22,18 @@ app = Flask(__name__)
 app.logger.setLevel(logging.ERROR)
 
 def start_callback(update: Update, context: CallbackContext):
+    check_webhook
     context.bot.send_message(chat_id=update.effective_chat.id, text="你好，我是你的 Bot！")
 
+
+def check_webhook():
+    
+    info = bot.getWebhookInfo()
+
+    print(f'URL: {info.url}, Has custom certificate: {info.has_custom_certificate}, Pending update count: {info.pending_update_count}, Last error date: {info.last_error_date}, Last error message: {info.last_error_message}')
+
 # 初始化你的 bot 和 Dispatcher
-bot = Bot(token=bot_token)
+bot = Bot(bot_token)
 bot.set_webhook(url=f"https://telegram-bot-liart-nine.vercel.app/{bot_token}")
 
 dispatcher = Dispatcher(bot, None, workers=1)
