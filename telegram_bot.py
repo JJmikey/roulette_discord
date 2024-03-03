@@ -78,37 +78,6 @@ def button(update: Update, context: CallbackContext):
     query.answer()
 
     # execute a GET request
-    response = requests.get("碰到ERROR了:
-
-[ERROR]	2024-03-03T07:48:46.432Z	a2fc77ce-e9cc-4948-8c7e-4b049529deff	No error handlers are registered, logging exception.
-Traceback (most recent call last):
-  File "/var/task/telegram/ext/dispatcher.py", line 555, in process_update
-    handler.handle_update(update, self, check, context)
-  File "/var/task/telegram/ext/handler.py", line 198, in handle_update
-    return self.callback(update, context)
-  File "./telegram_bot.py", line 81, in button
-    response = requests.get("todo4coze.vercel.app/task")  # here you need to replace with your API URL
-  File "/var/task/requests/api.py", line 73, in get
-    return request("get", url, params=params, **kwargs)
-  File "/var/task/requests/api.py", line 59, in request
-    return session.request(method=method, url=url, **kwargs)
-  File "/var/task/requests/sessions.py", line 575, in request
-    prep = self.prepare_request(req)
-  File "/var/task/requests/sessions.py", line 486, in prepare_request
-    p.prepare(
-  File "/var/task/requests/models.py", line 368, in prepare
-    self.prepare_url(url, params)
-  File "/var/task/requests/models.py", line 439, in prepare_url
-    raise MissingSchema(
-requests.exceptions.MissingSchema: Invalid URL 'todo4coze.vercel.app/task': No scheme supplied. Perhaps you meant https://todo4coze.vercel.app/task?
-
-我的CODE:
-def button(update: Update, context: CallbackContext):
-    # 獲取按鈕的回調數據
-    query = update.callback_query
-    query.answer()
-
-    # execute a GET request
     response = requests.get("http://todo4coze.vercel.app/task")  # here you need to replace with your API URL
     data = response.json()   # convert the response to JSON format
 
@@ -117,15 +86,6 @@ def button(update: Update, context: CallbackContext):
 
     query.edit_message_text(text="你按了：{}，API 回覆了：{}".format(query.data, msg))
 
-
-
-)  # here you need to replace with your API URL
-    data = response.json()   # convert the response to JSON format
-
-    # 例如假設你的 API 回覆了一條訊息在 'message' 鍵中，你可以這樣操作：
-    msg = data['message']
-
-    query.edit_message_text(text="你按了：{}，API 回覆了：{}".format(query.data, msg))
 
 
     # 你可以在這裡使用 ID 進行判斷然後調用你想要的函數
