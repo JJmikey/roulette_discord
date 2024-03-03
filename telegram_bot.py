@@ -63,8 +63,8 @@ chat_history = {}
 def start_callback(update: Update, context: CallbackContext):
     # 創建你的按鈕
     button_list = [
-        InlineKeyboardButton("要", callback_data='yes'),
-        InlineKeyboardButton("不要", callback_data='no')
+        [InlineKeyboardButton("要", callback_data='yes')], 
+        [InlineKeyboardButton("不要", callback_data='no')]
     ]
     # 創建你的鍵盤並將按鈕添加到鍵盤上
     reply_markup = InlineKeyboardMarkup(button_list)
