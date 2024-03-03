@@ -102,17 +102,10 @@ def text_callback(update: Update, context: CallbackContext):
     # 在聊天历史记录中添加机器人的回应
     chat_history[chat_id].append({"role": "bot", "parts": response})  
     
-    # 給按鈕創建一個簡單的回應
-    button_list = [
-        [InlineKeyboardButton("同意", callback_data='agree')],
-        [InlineKeyboardButton("不同意", callback_data='disagree')]
-    ]
-    reply_markup = InlineKeyboardMarkup(button_list)
-
-
+ 
 
     # 將生成的回應傳給用戶
-    context.bot.send_message(chat_id=update.effective_chat.id, text=response, reply_markup=reply_markup)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
 def set_webhook(update: Update, context: CallbackContext):
     bot.set_webhook(url=f"https://telegram-bot-liart-nine.vercel.app/{bot_token}")
