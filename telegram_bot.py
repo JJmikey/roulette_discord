@@ -2,6 +2,7 @@ import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 
 import os 
+import requests
 
 import logging
 from flask import Flask, request, jsonify
@@ -75,8 +76,19 @@ def button(update: Update, context: CallbackContext):
     # 獲取按鈕的回調數據
     query = update.callback_query
     query.answer()
+
+    # execute a GET request
+    response = requests.get("todo4coze.vercel.app/task")  # here you need to replace with your API URL
+    data = response.json()   # convert the response to JSON format
+
+    # 例如假設你的 API 回覆了一條訊息在 'message' 鍵中，你可以這樣操作：
+    msg = data['message']
+
+    query.edit_message_text(text="你按了：{}，API 回覆了：{}".format(query.data, msg))
+
+
     # 你可以在這裡使用 ID 進行判斷然後調用你想要的函數
-    query.edit_message_text(text="你按了：{}".format(query.data))
+    #query.edit_message_text(text="你按了：{}".format(query.data))
 
 
 def text_callback(update: Update, context: CallbackContext):
