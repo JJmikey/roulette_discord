@@ -81,8 +81,11 @@ def button(update: Update, context: CallbackContext):
     response = requests.get("http://todo4coze.vercel.app/task")  # here you need to replace with your API URL
     data = response.json()   # convert the response to JSON format
 
+    print(data) # print the returned data to check the structure
+
+    # now you can check the returned data and replace 'message' with the correct key
     # 例如假設你的 API 回覆了一條訊息在 'message' 鍵中，你可以這樣操作：
-    msg = data['message']
+    msg = str(data)
 
     query.edit_message_text(text="你按了：{}，API 回覆了：{}".format(query.data, msg))
 
