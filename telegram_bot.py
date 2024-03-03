@@ -105,27 +105,31 @@ def text_callback(update: Update, context: CallbackContext):
     # 將生成的回應傳給用戶
     context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
+def set_webhook(update: Update, context: CallbackContext):
+    bot.set_webhook(url=f"https://telegram-bot-liart-nine.vercel.app/{bot_token}")
+
+
+
 
 # 初始化你的 bot 和 Dispatcher
 bot = Bot(bot_token)
-bot.set_webhook(url=f"https://telegram-bot-liart-nine.vercel.app/{bot_token}")
-
 dispatcher = Dispatcher(bot, None, workers=1)
+
+
 
 # 為你的 bot 添加處理函數
 start_handler = CommandHandler('start', start_callback)  # 你需要定義 start_callback
 dispatcher.add_handler(start_handler)
 dispatcher.add_handler(CallbackQueryHandler(button))
 
-Updater.start_polling()
+# 將 'set_webhook' 命令對應到 set_webhook function
+dispatcher.add_handler(CommandHandler('set_webhook', set_webhook)) #手動觸發設定更新的 command。輸入 "/set_webhook"
+
+
 
 # 創建一個新的處理器來處理所有 text 信息
 text_handler = MessageHandler(Filters.text, text_callback)
 dispatcher.add_handler(text_handler)
-
-
-
-
 
 
 
