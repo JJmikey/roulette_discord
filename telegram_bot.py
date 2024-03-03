@@ -6,8 +6,9 @@ import os
 import logging
 from flask import Flask, request, jsonify
 
-from telegram import Bot, Update
-from telegram.ext import CommandHandler, CallbackContext,MessageHandler,Dispatcher, Filters
+from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton
+from telegram.ext import Updater, CommandHandler, CallbackContext,CallbackQueryHandler, MessageHandler,Dispatcher, Filters
+
 
 
 # Ini)tialize Gemini-Pro
@@ -50,11 +51,32 @@ bot_token=os.getenv("TELEGRAM_BOT_TOKEN")
 
 app = Flask(__name__)
 
+
+
+
+
 # 將 chat_history 初始化為字典
 chat_history = {}
 
+
+
 def start_callback(update: Update, context: CallbackContext):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="你好，我是你的 Bot！")
+    # 創建你的按鈕
+    button_list = [
+        InlineKeyboardButton("要", callback_data='yes'),
+        InlineKeyboardButton("不要", callback_data='no')
+    ]
+    # 創建你的鍵盤並將按鈕添加到鍵盤上
+    reply_markup = InlineKeyboardMarkup(button_list)
+    # 發送消息並將你的鍵盤作為響應使用
+    context.bot.send_message(chat_id=update.effective_chat.id, text='要開始嗎?', reply_markup=reply_markup)
+
+def button(update: Update, context: CallbackContext):
+    # 獲取按鈕的回調數據
+    query = update.callback_query
+    query.answer()
+    # 你可以在這裡使用 ID 進行判斷然後調用你想要的函數
+    query.edit_message_text(text="你按了：{}".format(query.data))
 
 
 def text_callback(update: Update, context: CallbackContext):
@@ -83,6 +105,7 @@ def text_callback(update: Update, context: CallbackContext):
     # 將生成的回應傳給用戶
     context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
+
 # 初始化你的 bot 和 Dispatcher
 bot = Bot(bot_token)
 bot.set_webhook(url=f"https://telegram-bot-liart-nine.vercel.app/{bot_token}")
@@ -92,10 +115,19 @@ dispatcher = Dispatcher(bot, None, workers=1)
 # 為你的 bot 添加處理函數
 start_handler = CommandHandler('start', start_callback)  # 你需要定義 start_callback
 dispatcher.add_handler(start_handler)
+dispatcher.add_handler(CallbackQueryHandler(button))
+
+Updater.start_polling()
 
 # 創建一個新的處理器來處理所有 text 信息
 text_handler = MessageHandler(Filters.text, text_callback)
 dispatcher.add_handler(text_handler)
+
+
+
+
+
+
 
 
 
