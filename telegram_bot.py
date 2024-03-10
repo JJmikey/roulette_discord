@@ -105,7 +105,7 @@ def button(update: Update, context: CallbackContext):
     # 在聊天历史记录中添加机器人的回应
     chat_history[chat_id].append({"role": "bot", "parts": response})
 
-    query.edit_message_text(text="你按了：{}，API 回覆了：{}".format(query.data, response), parse_mode='Markdown')
+    query.edit_message_text(text="你按了：{}，API 回覆了：{}".format(query.data, response))
 
 
 
@@ -140,7 +140,7 @@ def text_callback(update: Update, context: CallbackContext):
  
 
     # 將生成的回應傳給用戶
-    context.bot.send_message(chat_id=update.effective_chat.id, text=response, parse_mode='Markdown')
+    context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
 def set_webhook(update: Update, context: CallbackContext):
     bot.set_webhook(url=f"https://telegram-bot-liart-nine.vercel.app/{bot_token}")
