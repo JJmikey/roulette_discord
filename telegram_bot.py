@@ -97,7 +97,7 @@ def button(update: Update, context: CallbackContext):
     # 將数据添加到聊天历史记录（context）中
     chat_history[chat_id].append({"role": "system", "parts": msg})
     # 在對話歷史中添加用戶消息
-    chat_history[chat_id].append({'role': 'user', 'parts': 'show tasks in a readable way'})
+    chat_history[chat_id].append({'role': 'user', 'parts': '用ZH-繁體中文show tasks in a readable way'})
     # 僅將對話歷史中的 'role' 和 'parts' 結合
     input_context = "".join(f"{msg['role']}:{msg['parts']}" for msg in chat_history[chat_id])
     # 使用 GEMINI 生成器創建回應
