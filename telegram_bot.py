@@ -70,7 +70,7 @@ def start_callback(update: Update, context: CallbackContext):
     # 創建你的鍵盤並將按鈕添加到鍵盤上
     reply_markup = InlineKeyboardMarkup(button_list)
     # 發送消息並將你的鍵盤作為響應使用
-    context.bot.send_message(chat_id=update.effective_chat.id, text='要開始嗎?', reply_markup=reply_markup)
+    context.bot.send_message(chat_id=update.effective_chat.id, text='要總結嗎?', reply_markup=reply_markup)
 
 def button(update: Update, context: CallbackContext):
     # 獲取按鈕的回調數據
@@ -97,8 +97,8 @@ def button(update: Update, context: CallbackContext):
     response = generate_response(input_context)
     # 在聊天历史记录中添加机器人的回应
     chat_history[chat_id].append({"role": "bot", "parts": response})
-    
-    query.edit_message_text(text="你按了：{}，API 回覆了：{}".format(query.data, msg))
+
+    query.edit_message_text(text="你按了：{}，API 回覆了：{}".format(query.data, response))
 
 
 
