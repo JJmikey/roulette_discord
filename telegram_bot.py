@@ -12,7 +12,7 @@ from telegram.ext import Updater, CommandHandler, CallbackContext,CallbackQueryH
 
 
 
-# Ini)tialize Gemini-Pro
+# Initialize Gemini-Pro
 api_key = os.getenv("GOOGLE_GEMINI_KEY")
 genai.configure(api_key=api_key)
 
@@ -81,12 +81,23 @@ def button(update: Update, context: CallbackContext):
     response = requests.get("http://todo4coze.vercel.app/task")  # here you need to replace with your API URL
     data = response.json()   # convert the response to JSON format
 
-    print(data) # print the returned data to check the structure
+    
 
     # now you can check the returned data and replace 'message' with the correct key
     # 例如假設你的 API 回覆了一條訊息在 'message' 鍵中，你可以這樣操作：
-    msg = str(data)
+    msg = str(data)  # 將 json 數據轉換為易讀的字符串
 
+    # 將数据添加到聊天历史记录（context）中
+    chat_history[chat_id].append({"role": "system", "parts": msg})
+    # 在對話歷史中添加用戶消息
+    chat_history[chat_id].append({'role': 'user', 'parts': 'show tasks in a readable way'})
+    # 僅將對話歷史中的 'role' 和 'parts' 結合
+    input_context = "".join(f"{msg['role']}:{msg['parts']}" for msg in chat_history[chat_id])
+    # 使用 GEMINI 生成器創建回應
+    response = generate_response(input_context)
+    # 在聊天历史记录中添加机器人的回应
+    chat_history[chat_id].append({"role": "bot", "parts": response})
+    
     query.edit_message_text(text="你按了：{}，API 回覆了：{}".format(query.data, msg))
 
 
@@ -96,6 +107,7 @@ def button(update: Update, context: CallbackContext):
 
 
 def text_callback(update: Update, context: CallbackContext):
+    global chat_id
     logging.info("執行 text_callback 函數")  # 這是新增的日誌語句
     # 獲取用户的消息和chat_id
     user_text = update.message.text
