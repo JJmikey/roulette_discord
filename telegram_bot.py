@@ -77,6 +77,9 @@ def button(update: Update, context: CallbackContext):
     query = update.callback_query
     query.answer()
 
+    # Get chat_id from the query message
+    chat_id = query.message.chat.id
+
     # execute a GET request
     response = requests.get("http://todo4coze.vercel.app/task")  # here you need to replace with your API URL
     data = response.json()   # convert the response to JSON format
@@ -107,7 +110,7 @@ def button(update: Update, context: CallbackContext):
 
 
 def text_callback(update: Update, context: CallbackContext):
-    global chat_id
+   
     logging.info("執行 text_callback 函數")  # 這是新增的日誌語句
     # 獲取用户的消息和chat_id
     user_text = update.message.text
