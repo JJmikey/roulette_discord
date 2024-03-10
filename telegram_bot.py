@@ -80,6 +80,10 @@ def button(update: Update, context: CallbackContext):
     # Get chat_id from the query message
     chat_id = query.message.chat.id
 
+    # 在添加任何新的聊天記錄之前，確保 chat_history 中已有 chat_id 鍵值
+    if chat_id not in chat_history:
+        chat_history[chat_id] = []
+
     # execute a GET request
     response = requests.get("http://todo4coze.vercel.app/task")  # here you need to replace with your API URL
     data = response.json()   # convert the response to JSON format
