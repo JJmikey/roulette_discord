@@ -50,15 +50,8 @@ def generate_img_response(photo_bytes_io):
     response = model.generate_content(photo_bytes_io)
     #response = model.generate_content(["Write a short, engaging blog post based on this picture.", photo_bytes_io], stream=True)
 
-    # 尝试从响应对象中提取文本内容
-    if hasattr(response, 'parts'):
-        # 如果回答包含多个部分，则遍历所有部分
-        for part in response.parts:
-                response_text = part.text
-                return response_text
-    else:
-        #如果回答只有一个简单的文本部分, 直接打印response.text
-        return response_text
+    # 尝试从响应对象中提取文本内容    
+    return response.text
 
 
 bot_token=os.getenv("TELEGRAM_BOT_TOKEN")
@@ -176,13 +169,13 @@ def photo_callback(update: Update, context: CallbackContext):
     context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_bytes_io, caption='處理後的圖片')
 
     # 重設游標位置，如果要再次讀取 BytesIO 對象
-    photo_bytes_io.seek(0)
-    
-    # 處理完成後，清理內存
-    photo_bytes_io.close()    
-  
+    photo_bytes_io.seek(0)    
+       
     # 使用 GEMINI 生成器創建回應
     response = generate_img_response(photo_bytes_io)
+
+    # 處理完成後，清理內存
+    photo_bytes_io.close() 
 
     # 最後，向用戶反饋處理完成的訊息
     context.bot.send_message(chat_id=update.effective_chat.id, text=response)
