@@ -1,5 +1,5 @@
 import google.generativeai as genai
-import PIL.Image
+
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 
 
