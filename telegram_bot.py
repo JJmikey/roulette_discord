@@ -36,7 +36,6 @@ def generate_response(input_text):
         )
     )
     # 尝试从响应对象中提取文本内容
-   
     if hasattr(response, 'parts'):
         # 如果回答包含多个部分，则遍历所有部分
         for part in response.parts:
@@ -46,7 +45,20 @@ def generate_response(input_text):
         #如果回答只有一个简单的文本部分, 直接打印response.text
         return response_text
 
-     
+def generate_img_response(photo_bytes_io):    
+    model = genai.GenerativeModel('gemini-pro-vision')
+    response = model.generate_content(photo_bytes_io)
+    #response = model.generate_content(["Write a short, engaging blog post based on this picture.", photo_bytes_io], stream=True)
+
+    # 尝试从响应对象中提取文本内容
+    if hasattr(response, 'parts'):
+        # 如果回答包含多个部分，则遍历所有部分
+        for part in response.parts:
+                response_text = part.text
+                return response_text
+    else:
+        #如果回答只有一个简单的文本部分, 直接打印response.text
+        return response_text
 
 
 bot_token=os.getenv("TELEGRAM_BOT_TOKEN")
@@ -167,10 +179,13 @@ def photo_callback(update: Update, context: CallbackContext):
     photo_bytes_io.seek(0)
     
     # 處理完成後，清理內存
-    photo_bytes_io.close()
-    
+    photo_bytes_io.close()    
+  
+    # 使用 GEMINI 生成器創建回應
+    response = generate_img_response(photo_bytes_io)
+
     # 最後，向用戶反饋處理完成的訊息
-    context.bot.send_message(chat_id=update.effective_chat.id, text='圖片處理完成!')
+    context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
 def set_webhook(update: Update, context: CallbackContext):
     bot.set_webhook(url=f"https://telegram-bot-liart-nine.vercel.app/{bot_token}")
