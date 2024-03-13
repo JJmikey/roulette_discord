@@ -12,7 +12,7 @@ from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, CallbackContext,CallbackQueryHandler, MessageHandler,Dispatcher, Filters
 
 from PIL import Image
-import io
+import io import BytesIO
 
 # Initialize Gemini-Pro
 api_key = os.getenv("GOOGLE_GEMINI_KEY")
