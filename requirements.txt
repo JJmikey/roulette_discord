@@ -3,3 +3,4 @@ Flask
 werkzeug
 google.generativeai
 requests
+Pillow==8.2.0
