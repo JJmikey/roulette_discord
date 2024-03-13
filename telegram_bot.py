@@ -8,11 +8,11 @@ import requests
 import logging
 from flask import Flask, request, jsonify
 
-from io import BytesIO
 from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, CallbackContext,CallbackQueryHandler, MessageHandler,Dispatcher, Filters
 
-
+from PIL import Image
+import io
 
 # Initialize Gemini-Pro
 api_key = os.getenv("GOOGLE_GEMINI_KEY")
@@ -46,8 +46,17 @@ def generate_response(input_text):
         return response_text
 
 def generate_img_response(photo_bytes_io):    
+    # 先將 BytesIO 對象轉換成圖片
+    photo_image = Image.open(photo_bytes_io)
+
     model = genai.GenerativeModel('gemini-pro-vision')
-    response = model.generate_content(photo_bytes_io)
+
+    # 因為需要將圖片封裝為 Blob 或 dict 格式的數據，所以使用 PIL image 進行處理
+    photo_blob = {'type': 'image/png', 'data': photo_image.tobytes()}
+
+    # 現在 photo_blob 是一個適當的格式，可以被模型處理
+    response = model.generate_content(photo_blob)
+
     #response = model.generate_content(["Write a short, engaging blog post based on this picture.", photo_bytes_io], stream=True)
 
     # 尝试从响应对象中提取文本内容    
