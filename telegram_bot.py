@@ -1,5 +1,4 @@
 import google.generativeai as genai
-
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 
 
@@ -9,6 +8,7 @@ import requests
 import logging
 from flask import Flask, request, jsonify
 
+from io import BytesIO
 from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, CallbackContext,CallbackQueryHandler, MessageHandler,Dispatcher, Filters
 
@@ -155,14 +155,22 @@ def photo_callback(update: Update, context: CallbackContext):
     # 使用 getFile 方法獲得 PhotoSize 對象
     photo_file = context.bot.get_file(photo_id)
     
-    # 下載照片到本地系統或者處理照片內容
-    photo_file.download('photo.jpg')
+    # 下載照片作為一個字節流 (BytesIO 對象)
+    photo_bytes_io = BytesIO(photo_file.download_as_bytearray())
     
     # 現在可以處理下載的照片 'photo.jpg'，或者將 file_path 傳遞給下一個功能來進一步處理
 
     # 反饋信息給用戶
-    context.bot.send_message(chat_id=update.effective_chat.id, text='收到圖片！')
+    context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_bytes_io, caption='處理後的圖片')
 
+    # 重設游標位置，如果要再次讀取 BytesIO 對象
+    photo_bytes_io.seek(0)
+    
+    # 處理完成後，清理內存
+    photo_bytes_io.close()
+    
+    # 最後，向用戶反饋處理完成的訊息
+    context.bot.send_message(chat_id=update.effective_chat.id, text='圖片處理完成!')
 
 def set_webhook(update: Update, context: CallbackContext):
     bot.set_webhook(url=f"https://telegram-bot-liart-nine.vercel.app/{bot_token}")
