@@ -1,5 +1,7 @@
 import google.generativeai as genai
+import PIL.Image
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
+
 
 import os 
 import requests
@@ -142,6 +144,26 @@ def text_callback(update: Update, context: CallbackContext):
     # 將生成的回應傳給用戶
     context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
+def photo_callback(update: Update, context: CallbackContext):
+    # 獲取用戶發送的照片列表（PhotoSize 對象）
+    photos = update.message.photo
+    
+    # 通常，照片列表中最後一張是解析度最高的版本
+    # 獲取最後一張照片的 file_id
+    photo_id = photos[-1].file_id
+    
+    # 使用 getFile 方法獲得 PhotoSize 對象
+    photo_file = context.bot.get_file(photo_id)
+    
+    # 下載照片到本地系統或者處理照片內容
+    photo_file.download('photo.jpg')
+    
+    # 現在可以處理下載的照片 'photo.jpg'，或者將 file_path 傳遞給下一個功能來進一步處理
+
+    # 反饋信息給用戶
+    context.bot.send_message(chat_id=update.effective_chat.id, text='收到圖片！')
+
+
 def set_webhook(update: Update, context: CallbackContext):
     bot.set_webhook(url=f"https://telegram-bot-liart-nine.vercel.app/{bot_token}")
 
@@ -169,7 +191,9 @@ text_handler = MessageHandler(Filters.text, text_callback)
 dispatcher.add_handler(text_handler)
 
 
-
+# 創建一個新的處理器來處理有照片的消息
+photo_handler = MessageHandler(Filters.photo, photo_callback)
+dispatcher.add_handler(photo_handler)
 
 
 @app.route(f"/{bot_token}", methods=['POST'])
