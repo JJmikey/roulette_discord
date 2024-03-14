@@ -46,7 +46,7 @@ def generate_response(input_text):
         #如果回答只有一个简单的文本部分, 直接打印response.text
         return response_text
 
-def generate_img_response(photo_bytes_io):    
+def generate_img_response(photo_bytes_io, prompt_text):    
     # 先將 BytesIO 對象轉換成圖片
     photo_image = Image.open(photo_bytes_io)
 
