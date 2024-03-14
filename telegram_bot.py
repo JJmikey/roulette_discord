@@ -62,7 +62,14 @@ def generate_img_response(photo_bytes_io, prompt_text):
   
 
     # 現在 photo_blob 和 prompt_text 都是一個適當的格式，可以被模型處理
-    response = model.generate_content([prompt_text, photo_blob], stream=True)
+    response = model.generate_content([prompt_text, photo_blob], stream=True,
+                                        generation_config=genai.types.GenerationConfig(
+                                        candidate_count=1,
+                                        stop_sequences=['||'],
+                                        max_output_tokens=4000,
+                                        temperature=0.6,
+                                        )
+                                      )
 
     #response = model.generate_content(["Write a short, engaging blog post based on this picture.", photo_bytes_io], stream=True)
 
