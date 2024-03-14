@@ -12,6 +12,7 @@ from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, CallbackContext,CallbackQueryHandler, MessageHandler,Dispatcher, Filters
 
 from PIL import Image
+import base64
 from io import BytesIO
 
 # Initialize Gemini-Pro
@@ -51,8 +52,12 @@ def generate_img_response(photo_bytes_io):
 
     model = genai.GenerativeModel('gemini-pro-vision')
 
-    # 因為需要將圖片封裝為 Blob 或 dict 格式的數據，所以使用 PIL image 進行處理
-    photo_blob = {'type': 'image/png', 'data': photo_image.tobytes()}
+    # 將圖片轉換為 base64 編碼
+    buffered = BytesIO()
+    photo_image.save(buffered, format="PNG")
+    img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')  # 轉化為 base64 字串
+
+    photo_blob = {'mime_type': 'image/png', 'data': img_str}  # 修改為正確的鍵和資料格式
 
     # 現在 photo_blob 是一個適當的格式，可以被模型處理
     response = model.generate_content(photo_blob)
