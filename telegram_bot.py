@@ -59,8 +59,8 @@ def generate_img_response(photo_bytes_io):
 
     photo_blob = {'mime_type': 'image/png', 'data': img_str}  # 修改為正確的鍵和資料格式
 
-    # 現在 photo_blob 是一個適當的格式，可以被模型處理
-    response = model.generate_content(photo_blob)
+    # 現在 photo_blob 和 prompt_text 都是一個適當的格式，可以被模型處理
+    response = model.generate_content({"prompt": prompt_text, "blob": photo_blob})
 
     #response = model.generate_content(["Write a short, engaging blog post based on this picture.", photo_bytes_io], stream=True)
 
@@ -166,6 +166,9 @@ def text_callback(update: Update, context: CallbackContext):
 def photo_callback(update: Update, context: CallbackContext):
     # 獲取用戶發送的照片列表（PhotoSize 對象）
     photos = update.message.photo
+
+    # 獲取照片的標題文字，如果有的話
+    prompt_text = update.message.caption if update.message.caption else "請提供一個提示文本。"
     
     # 通常，照片列表中最後一張是解析度最高的版本
     # 獲取最後一張照片的 file_id
@@ -180,16 +183,20 @@ def photo_callback(update: Update, context: CallbackContext):
     # 現在可以處理下載的照片 'photo.jpg'，或者將 file_path 傳遞給下一個功能來進一步處理
 
     # 反饋信息給用戶
-    context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_bytes_io, caption='處理後的圖片')
+    context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_bytes_io, caption='您的圖片')
 
     # 重設游標位置，如果要再次讀取 BytesIO 對象
     photo_bytes_io.seek(0)    
        
     # 使用 GEMINI 生成器創建回應
-    response = generate_img_response(photo_bytes_io)
+    response = generate_img_response(photo_bytes_io, prompt_text)
 
     # 處理完成後，清理內存
     photo_bytes_io.close() 
+
+    # 如果沒有收到提示文本，通知用戶
+    if not prompt_text:
+        response = "請重新發送圖片並添加有效的提示文本。"
 
     # 最後，向用戶反饋處理完成的訊息
     context.bot.send_message(chat_id=update.effective_chat.id, text=response)
