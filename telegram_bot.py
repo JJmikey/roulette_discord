@@ -67,7 +67,8 @@ def generate_img_response(photo_bytes_io, prompt_text):
                                         candidate_count=1,
                                         stop_sequences=['||'],
                                         max_output_tokens=4000,
-                                        temperature=0.6,
+                                        temperature=1,
+                                        top_p=0.6,
                                         )
                                       )
 
