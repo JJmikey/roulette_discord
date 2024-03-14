@@ -66,6 +66,8 @@ def generate_img_response(photo_bytes_io, prompt_text):
 
     #response = model.generate_content(["Write a short, engaging blog post based on this picture.", photo_bytes_io], stream=True)
 
+    response.resolve()  # 確保回應完成遍歷
+
     # 尝试从响应对象中提取文本内容    
     return response.text
 
