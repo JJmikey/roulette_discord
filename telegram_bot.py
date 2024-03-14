@@ -59,17 +59,10 @@ def generate_img_response(photo_bytes_io, prompt_text):
 
     photo_blob = {'mime_type': 'image/png', 'data': img_str}  # 修改為正確的鍵和資料格式
 
-    # 构建请求的内容格式以符合API预期
-    request_content = {
-        "parts": [
-            {"text": {"data": prompt_text}},
-            {"blob": photo_blob}
-        ]
-    }
-
+  
 
     # 現在 photo_blob 和 prompt_text 都是一個適當的格式，可以被模型處理
-    response = model.generate_content(request_content)
+    response = model.generate_content([prompt_text, photo_bytes_io], stream=True)
 
     #response = model.generate_content(["Write a short, engaging blog post based on this picture.", photo_bytes_io], stream=True)
 
