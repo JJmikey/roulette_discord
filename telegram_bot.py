@@ -76,7 +76,7 @@ def generate_img_response(photo_bytes_io, prompt_text):
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": "https://imgur.com/5TA0D9O",
+                            "url": "https://i.imgur.com/5TA0D9O.jpeg",
                         },
                     },
                 ],
