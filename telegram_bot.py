@@ -2,6 +2,7 @@ import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 
 import openai
+from openai import OpenAI
 
 import os 
 import requests
@@ -18,6 +19,7 @@ from io import BytesIO
 
 # 你的 OpenAI API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI()
 
 # Initialize Gemini-Pro
 api_key = os.getenv("GOOGLE_GEMINI_KEY")
