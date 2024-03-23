@@ -1,6 +1,7 @@
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 
+import openai
 
 import os 
 import requests
@@ -14,6 +15,9 @@ from telegram.ext import Updater, CommandHandler, CallbackContext,CallbackQueryH
 from PIL import Image
 import base64
 from io import BytesIO
+
+# 你的 OpenAI API key
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Initialize Gemini-Pro
 api_key = os.getenv("GOOGLE_GEMINI_KEY")
@@ -62,22 +66,30 @@ def generate_img_response(photo_bytes_io, prompt_text):
   
 
     # 現在 photo_blob 和 prompt_text 都是一個適當的格式，可以被模型處理
-    response = model.generate_content([prompt_text, photo_blob], stream=True,
-                                        generation_config=genai.types.GenerationConfig(
-                                        candidate_count=1,
-                                        stop_sequences=['||'],
-                                        max_output_tokens=4000,
-                                        temperature=1,
-                                        top_p=0.6,
-                                        )
-                                      )
-
-    #response = model.generate_content(["Write a short, engaging blog post based on this picture.", photo_bytes_io], stream=True)
+    response = client.chat.completions.create(
+        model="gpt-4-vision-preview",
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": "解釋題目5"},
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": "https://imgur.com/5TA0D9O",
+                        },
+                    },
+                ],
+            }
+        ],
+        max_tokens=300,
+    )
+        
 
     response.resolve()  # 確保回應完成遍歷
 
     # 尝试从响应对象中提取文本内容    
-    return response.text
+    return response.choices[0]
 
 
 bot_token=os.getenv("TELEGRAM_BOT_TOKEN")
