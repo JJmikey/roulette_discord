@@ -20,7 +20,7 @@ api_key = os.getenv("GOOGLE_GEMINI_KEY")
 genai.configure(api_key=api_key)
 
 def generate_response(input_text):
-    model = genai.GenerativeModel('gemini-pro')
+    model = genai.GenerativeModel('gemini-1.0-pro')
     response = model.generate_content(
         input_text,
         safety_settings={
