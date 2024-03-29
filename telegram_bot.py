@@ -214,7 +214,7 @@ def photo_callback(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
 def set_webhook(update: Update, context: CallbackContext):
-    bot.set_webhook(url=f"https://telegram-bot-liart-nine.vercel.app/{bot_token}")
+    bot.set_webhook(url=f"https://telegram-bot-theta-two.vercel.app/{bot_token}")
 
 
 
