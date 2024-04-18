@@ -15,6 +15,8 @@ from PIL import Image
 import base64
 from io import BytesIO
 
+task_url = os.getenv("task_api_url")
+
 # Initialize Gemini-Pro
 api_key = os.getenv("GOOGLE_GEMINI_KEY")
 genai.configure(api_key=api_key)
@@ -118,7 +120,7 @@ def button(update: Update, context: CallbackContext):
         chat_history[chat_id] = []
 
     # execute a GET request
-    response = requests.get("http://todo4coze.vercel.app/task")  # here you need to replace with your API URL
+    response = requests.get(task_url)  # here you need to replace with your API URL
     data = response.json()   # convert the response to JSON format
 
     
