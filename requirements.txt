@@ -1,7 +1,2 @@
-python-telegram-bot==13.7
-Flask
-werkzeug
-google.generativeai
-requests
-Pillow==8.2.0
+discord
 
